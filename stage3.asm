@@ -5,6 +5,7 @@ str r1, .ReadString //gets the input from the user
 mov r2, #display2 
 
 loop1:              //for re displaying the number of matchsticks
+mov r2, #display2 
 str r2, .WriteString //display 2
 mov r3, #numOfMatchsticks
 ldr r3, .InputNum       // r3 has number of matchsticks
@@ -124,7 +125,7 @@ str r6, .WriteString
 str r1, .WriteString //stored player name
 mov r2, #disWin
 str r2, .WriteString
-halt
+b gameover
 
 
 lose:
@@ -133,22 +134,24 @@ str r6, .WriteString
 str r1, .WriteString //stored player name
 mov r2, #disLose
 str r2, .WriteString
-halt
+b gameover
 
 draw:
 mov r2, #disDraw
 str r2, .WriteString
-halt
-
-
-
-
-
+b gameover
 
 gameover:
 mov r12, #gameFinish
 str r12, .WriteString
+mov r7, #yesORno
+str r7, .ReadString
 
+ldrb r7,[r7] //to load first byte of the input
+
+cmp r7, #121 //ascii number for "y"
+beq loop1
+cmp r7, #110 //ascii number for "n"
 halt
 
 //stage1
@@ -164,7 +167,7 @@ dis1: .asciz "\nPlayer "
 dis2: .asciz ", there are "
 dis3: .asciz " matchsticks remaining."
 question1: .asciz ", how many do you want to remove (1-7)?"
-gameFinish: .asciz "\nGAME OVER!\n"
+
 
 //stage3
 disBot1: .asciz "\nComputer Player's Turn\n"
@@ -172,3 +175,5 @@ disBot2: .asciz "\nComputer choose to remove "
 disLose: .asciz ", YOU LOSE!!!\n"
 disWin: .asciz ". YOU WIN!\n"
 disDraw: .asciz "\n Its a draw!\n"
+gameFinish: .asciz "\nPlay again (y/n) ?\n"
+yesORno: .BLOCK 128
