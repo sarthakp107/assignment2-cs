@@ -152,6 +152,10 @@ ldrb r7,[r7] //to load first byte of the input
 cmp r7, #121 //ascii number for "y"
 beq loop1
 cmp r7, #110 //ascii number for "n"
+beq stop
+b gameover
+
+stop:
 halt
 
 //stage1
