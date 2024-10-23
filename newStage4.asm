@@ -79,7 +79,11 @@ str r4, .WriteString
 
 mov r5, #dis2 //there are
 str r5, .WriteString
-str r7, .WriteSignedNum //remaining matchsticks
+//added
+mov r5, r7 // Remaining matchsticks
+    str r5, .WriteSignedNum
+    /////adde f
+//str r7, .WriteSignedNum //remaining matchsticks
 mov r5 , #dis3
 str r5, .WriteString
 ////////////////////
@@ -100,15 +104,17 @@ bgt playerTurn
 
 //update the remaining matchsticks
 sub r7, r7 , r8
-mov r0,r7
+//mov r0,r7
 push {lr}
 bl displayRemainingMatch
 pop {lr}
+
+
 cmp r7, #0
 beq gameover
 cmp r7, #1
 beq win
-b playerTurn
+b computerTurn
 
 pop {r3,r4,r5,r6}
 ret
@@ -116,23 +122,79 @@ ret
 //display remaining matchsticks
 displayRemainingMatch:
 push {r3,r4,lr}
-mov r3, r0
-mov r4, #dis2 //there are
-str r4, .WriteString
+mov r3, r7
 str r3, .WriteSignedNum
 mov r4 , #dis3
 str r4, .WriteString
 pop {r3,r4,lr}
 ret
 
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+computerTurn:
+mov r0, #disBot1
+str r0, .WriteString
+
+//display the remaining matchsticks
+bl displayRemainingMatch
 
 
+//random number to remove the matchstick (bot input)
+random:
+ldr r1, .Random //generate random number
+and r1 , r1 , #7 //limit the value to a range.. 0-7
+cmp r1, #0 //if the random number == 0 regenerate the number
+beq random
+cmp r1,r7
+bgt random //if random number > remaining matchsticks .. regenerate
+//else
+mov r2, #disBot2 //computer choose to remove
+str r2, .WriteString
+str r1, .WriteSignedNum
+mov r2, #macthstickOutputNoSpace
+str r2 , .WriteString
 
+sub r7,r7,r1 //subtract matchsticks from the bot input
+
+
+str r7, .WriteSignedNum //remaining matchsticks
+mov r2, #dis3
+str r2, .WriteString
+
+cmp r7, #1
+beq lose
+bgt playerTurn
+
+cmp r7, #1
+beq win
+
+cmp r7,#0
+beq draw
+
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
 win:
 mov r1, #dis1 //player
 str r1, .WriteString
 str r4, .WriteString //stored player name
 mov r2, #disWin
+str r2, .WriteString
+b gameover
+
+lose:
+mov r6, #dis1 //player
+str r6, .WriteString
+str r1, .WriteString //stored player name
+mov r2, #disLose
+str r2, .WriteString
+b gameover
+
+draw:
+mov r2, #disDraw
 str r2, .WriteString
 b gameover
 
@@ -147,14 +209,15 @@ display1: .asciz "Please Enter Your Name\n"
 display2: .asciz "How Many matchsticks (10-100)?\n" 
 nameOutput: .asciz "Player 1 is "
 matchsticksOutput: .asciz "\nMatchsticks: "
+macthstickOutputNoSpace: .asciz " matchsticks\n"
 myName: .BLOCK 128
 numOfMatchsticks: .Word 0
 
 //stage2
 dis1: .asciz "\nPlayer "
 dis2: .asciz ", there are "
-dis3: .asciz " matchsticks remaining."
-question1: .asciz ", how many do you want to remove (1-7)?"
+dis3: .asciz " matchsticks remaining"
+question1: .asciz ", how many do you want to remove (1-7)?\n"
 
 
 //stage3
