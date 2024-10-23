@@ -6,15 +6,10 @@ mov r0, #10
 mov r1, #100
 bl matchstickToStartWith
 mov r0, r5
-mov r1, #1
-mov r2, #7
+
 bl playerTurn
 
 halt
-
-//r5,r7
-
-
 
 //function to ask name
 askForName:
@@ -82,8 +77,7 @@ str r5, .WriteString
 //added
 mov r5, r7 // Remaining matchsticks
     str r5, .WriteSignedNum
-    /////adde f
-//str r7, .WriteSignedNum //remaining matchsticks
+
 mov r5 , #dis3
 str r5, .WriteString
 ////////////////////
@@ -98,8 +92,8 @@ str r8, .WriteSignedNum
 mov r3, #newLine
 str r3, .WriteString
 
-mov r5 , r1 //1
-mov r6 , r2 //7
+mov r5 , #1 //1
+mov r6 , #7 //7
 cmp r8 , r5
 blt playerTurn
 cmp r8, r6
@@ -209,6 +203,19 @@ mov r1, #gameFinish
 str r1, .WriteString
 mov r2, #yesORno
 str r2, .ReadString
+
+ldrb r2,[r2] //to load first byte of the input
+
+cmp r2, #121 //ascii number for "y"
+beq playerTurn
+cmp r2, #110 //ascii number for "n"
+beq stop
+b gameover
+
+
+stop:
+halt 
+
 
 //stage1
 display1: .asciz "Please Enter Your Name\n"
