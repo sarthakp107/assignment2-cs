@@ -7,7 +7,6 @@ mov r0, #10
 mov r1, #100
 bl matchstickToStartWith
 mov r0, r5
-
 bl playerTurn
 
 halt
@@ -37,10 +36,6 @@ bl displayPlayerInfo
 ret
 
 
-////////////////////////////////////////
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
 //display player name and matchsticks
 
 displayPlayerInfo:
@@ -58,12 +53,7 @@ push {lr}
     ret
 
 
-////////////////////////////////////////
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-//display the remaining number of matchsticks
-//Player <name>, there are <X> matchsticks remaining 
-
+//function for players turn
 playerTurn:
 push {r3,r4,r5,r6}
 
@@ -75,17 +65,17 @@ str r4, .WriteString
 
 mov r5, #dis2 //there are
 str r5, .WriteString
-//added
+
 mov r5, r7 // Remaining matchsticks
     str r5, .WriteSignedNum
 
 mov r5 , #dis3
 str r5, .WriteString
-////////////////////
+
  // Ask how many matchsticks to remove
     mov r3, #question1
     str r3, .WriteString   // "How many do you want to remove?"
-    ldr r8, .InputNum      // Get user input
+    ldr r8, .InputNum      // get user input
 
 mov r3, #dis4 //you choose
 str r3, .WriteString
@@ -93,8 +83,8 @@ str r8, .WriteSignedNum
 mov r3, #newLine
 str r3, .WriteString
 
-mov r5 , #1 //1
-mov r6 , #7 //7
+mov r5 , #1 
+mov r6 , #7 
 cmp r8 , r5
 blt playerTurn
 cmp r8, r6
@@ -109,7 +99,6 @@ sub r7, r7 , r8
 push {lr}
 bl displayRemainingMatch
 pop {lr}
-
 
 cmp r7, #0
 beq draw
@@ -131,8 +120,7 @@ pop {r3,r4,lr}
 ret
 
 /////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
+
 computerTurn:
 mov r0, #disBot1
 str r0, .WriteString
@@ -140,12 +128,11 @@ str r0, .WriteString
 //display the remaining matchsticks
 bl displayRemainingMatch
 
-
 //random number to remove the matchstick (bot input)
 random:
 ldr r1, .Random //generate random number
 and r1 , r1 , #7 //limit the value to a range.. 0-7
-cmp r1, #0 //if the random number == 0 regenerate the number
+cmp r1, #0 //if the random number === 0 regenerate the number
 beq random
 cmp r1,r7
 bgt random //if random number > remaining matchsticks .. regenerate
@@ -174,10 +161,7 @@ cmp r7,#0
 beq draw
 
 /////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
+
 win:
 mov r1, #dis1 //player
 str r1, .WriteString
