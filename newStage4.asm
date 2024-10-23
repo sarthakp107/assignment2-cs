@@ -2,6 +2,7 @@
 
 main: 
 bl askForName
+play:
 mov r0, #10
 mov r1, #100
 bl matchstickToStartWith
@@ -111,7 +112,7 @@ pop {lr}
 
 
 cmp r7, #0
-beq gameover
+beq draw
 cmp r7, #1
 beq win
 b computerTurn
@@ -207,7 +208,7 @@ str r2, .ReadString
 ldrb r2,[r2] //to load first byte of the input
 
 cmp r2, #121 //ascii number for "y"
-beq playerTurn
+beq play
 cmp r2, #110 //ascii number for "n"
 beq stop
 b gameover
