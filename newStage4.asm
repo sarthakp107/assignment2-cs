@@ -92,6 +92,12 @@ str r5, .WriteString
     str r3, .WriteString   // "How many do you want to remove?"
     ldr r8, .InputNum      // Get user input
 
+mov r3, #dis4 //you choose
+str r3, .WriteString
+str r8, .WriteSignedNum
+mov r3, #newLine
+str r3, .WriteString
+
 mov r5 , r1 //1
 mov r6 , r2 //7
 cmp r8 , r5
@@ -218,6 +224,8 @@ dis1: .asciz "\nPlayer "
 dis2: .asciz ", there are "
 dis3: .asciz " matchsticks remaining"
 question1: .asciz ", how many do you want to remove (1-7)?\n"
+dis4: .asciz "\nYou Choose: "
+newLine: .asciz "\n"
 
 
 //stage3
