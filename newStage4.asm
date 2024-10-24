@@ -33,6 +33,8 @@ blt matchstickToStartWith
 cmp r7,r1
 bgt matchstickToStartWith
 bl displayPlayerInfo
+str r3, .ClearScreen
+bl drawing
 ret
 
 
@@ -47,6 +49,7 @@ push {lr}
     mov r6, #matchsticksOutput
     str r6, .WriteString       // Display matchsticks message
     str r7, .WriteSignedNum    // Show number of matchsticks
+    bl drawing
     pop {r3}
     pop {lr}
     pop {lr}
@@ -99,6 +102,8 @@ sub r7, r7 , r8
 push {lr}
 bl displayRemainingMatch
 pop {lr}
+str r3, .ClearScreen
+bl drawing
 
 cmp r7, #0
 beq draw
@@ -150,6 +155,9 @@ str r7, .WriteSignedNum //remaining matchsticks
 mov r2, #dis3
 str r2, .WriteString
 
+str r3, .ClearScreen
+bl drawing
+
 cmp r7, #1
 beq lose
 bgt playerTurn
@@ -173,7 +181,7 @@ b gameover
 lose:
 mov r6, #dis1 //player
 str r6, .WriteString
-str r1, .WriteString //stored player name
+str r4, .WriteString //stored player name
 mov r2, #disLose
 str r2, .WriteString
 b gameover
@@ -199,7 +207,75 @@ b gameover
 
 
 stop:
+str r3, .ClearScreen
 halt 
+
+//function for drawing mid-res.... 64col, 48rows
+drawing:
+push {r1,r2,r4,r5,r6,r9,r10,r11}
+mov r0, #1 //x coordinate
+mov r1 , #1 //y coordinate
+
+mov r9, #0 //initializing number of matchsticks drawn
+
+
+//label to draw the matchstick
+drawMatchStick:
+mov r3, #.PixelScreen 
+//drawing the red part of the matchstick
+mov r2, #.red
+lsl r4, r0, #2 //increasing x-coordinate by 4
+lsl r5,r1, #8 //y-coordinate by 256
+add r5,r5,r4
+str r2, [r3+r5]
+
+//drawing the body
+mov r2, #.sandybrown
+
+mov r8, #3
+
+matchstickBody:
+add r0,r0,#1 //increasing x-coordinate by 1 pixel
+lsl r4,r0,#2
+lsl r5,r1,#8
+add r5,r5,r4 //get the pixel index
+//draw the body
+str r2, [r3+r5]
+
+
+sub r8,r8,#1 //decreamenting pixel count and branching if greater than 0
+cmp r8, #0
+bgt matchstickBody
+
+//move to the next matchstick by adding 3 to r0 as r0 = 1, 1+3=4
+add r0,r0,#3
+add r9,r9,#1 //adding number of matchsticks drawn
+add r10,r10,#1
+
+cmp r9,r7
+beq endDraw
+
+//to check if we need a new line
+cmp r10, #10
+beq newLineScreen
+b drawMatchStick
+
+newLineScreen:
+add r1,r1,#4
+mov r0,#1
+add r11,r11,#1
+mov r10,#0
+
+cmp r11, #10
+blt drawMatchStick
+
+
+endDraw:
+pop {r1,r2,r4,r5,r6,r9,r10,r11}
+ret
+
+
+
 
 
 //stage1
