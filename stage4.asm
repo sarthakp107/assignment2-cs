@@ -1,8 +1,10 @@
 //104817068
+//sarthak pradhan
 
 main: 
 bl askForName
 play:
+str r3 , .ClearScreen
 mov r0, #10
 mov r1, #100
 bl matchstickToStartWith
@@ -37,18 +39,17 @@ str r3, .ClearScreen
 bl drawing
 ret
 
-
 //display player name and matchsticks
 
 displayPlayerInfo:
 push {lr}
     mov r4, #nameOutput
-    str r4, .WriteString       // "Player 1 is "
+    str r4, .WriteString       // "player 1 is "
     mov r5, #myName
-    str r5, .WriteString       // Display player's name
+    str r5, .WriteString       // display player's name
     mov r6, #matchsticksOutput
-    str r6, .WriteString       // Display matchsticks message
-    str r7, .WriteSignedNum    // Show number of matchsticks
+    str r6, .WriteString       // display matchsticks message
+    str r7, .WriteSignedNum    // show number of matchsticks
     bl drawing
     pop {r3}
     pop {lr}
@@ -60,7 +61,6 @@ push {lr}
 playerTurn:
 push {r3,r4,r5,r6}
 
-//displays this: Player <name>, there are <X> matchsticks remaining 
 mov r3, #dis1 //player
 str r3, .WriteString
 mov r4 , #myName   //stored player name
@@ -273,10 +273,6 @@ blt drawMatchStick
 endDraw:
 pop {r1,r2,r4,r5,r6,r9,r10,r11}
 ret
-
-
-
-
 
 //stage1
 display1: .asciz "Please Enter Your Name\n"
