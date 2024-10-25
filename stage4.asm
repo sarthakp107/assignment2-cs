@@ -187,6 +187,7 @@ str r2, .WriteString
 b gameover
 
 draw:
+str r3, .ClearScreen
 mov r2, #disDraw
 str r2, .WriteString
 b gameover
